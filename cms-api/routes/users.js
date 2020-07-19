@@ -112,6 +112,12 @@ router.post('/login', function (req, res, next) {
     })
 });
 
+//======POST CHECK TOKEN====
+router.post('/check', function (req, res, next) {
+  let token = req.headers
+  console.log(token)
+});
+
 
 
 module.exports = router;
