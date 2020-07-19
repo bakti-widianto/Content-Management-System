@@ -56,7 +56,61 @@ router.post('/register', function (req, res, next) {
     })
 });
 
+//=========POST LOGIN=========
+router.post('/login', function (req, res, next) {
+  let { email, password } = req.body;
+  let response = {
+    message: "",
+    data: {},
+    token: ""
+  }
+  Users.findOne({ email })
+    .then(data => {
+      if (data == null) {
+        response.message = "Email dosen't exist"
+        res.status(200).json(response)
+      } else {
+        bcrypt.compare(password, data.password)
+          .then(checkPassword => {
+            if (checkPassword) {
 
+              if (data.token) {
+                response.message = "Authentication Success"
+                response.data.email = data.email
+                response.token = data.token
+                res.status(201).json(response)
+
+              } else {
+                const newToken = jwt.sign({ email: data.email }, rahasia)
+                Users.updateOne({ email: data.email }, { token: newToken })
+                  .then(() => {
+                    response.message = "Authentication Success"
+                    response.data.email = data.email
+                    response.token = newToken
+                    res.status(201).json(response)
+                  })
+                  .catch(err => {
+                    response.message = "Update Token Failed"
+                    res.status(200).json(response)
+                  })
+              }
+
+            } else {
+              response.message = "Authentication Failed"
+              res.status(500).json(response)
+            }
+          })
+          .catch(err => {
+            response.message = "Authentication failed";
+            res.status(500).json(response);
+          })
+      }
+
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+});
 
 
 
