@@ -27,26 +27,26 @@ router.post('/register', function (req, res, next) {
         return res.status(200).json(response)
 
       } else {
-        bcrypt.hash(password, saltRounds).then(function (hash) {
-          var token = jwt.sign({ email: email }, rahasia);
-          let user = new Users({
-            email: email,
-            password: hash,
-            token: token
+
+        var token = jwt.sign({ email: email }, rahasia);
+        let user = new Users({
+          email: email,
+          password: password,
+          token: token
+        })
+        user.save()
+          .then(data => {
+            response.message = "register success"
+            response.data.email = email
+            response.token = token
+            res.status(201).json(response)
           })
-          user.save()
-            .then(data => {
-              response.message = "register success"
-              response.data.email = email
-              response.token = token
-              res.status(201).json({ response })
+          .catch(err => {
+            res.status(500).json({
+              error: err
             })
-            .catch(err => {
-              res.status(500).json({
-                error: err
-              })
-            })
-        });
+          })
+
       }
     }).catch(err => {
       res.status(500).json({
