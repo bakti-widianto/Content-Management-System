@@ -19,8 +19,9 @@ describe('users', function () {
             password: 'testing',
             token: ''
         });
+
         user.save(function (err) {
-            if (err) console.log(err)
+            if (err) console.log(err);
             else {
                 done();
             }
@@ -45,12 +46,36 @@ describe('users', function () {
             .end(function (err, res) {
                 res.should.have.status(201);
                 res.should.be.json;
-                res.body.response.should.have.property("message");
-                res.body.response.should.have.property('data');
-                res.body.response.should.have.property('token');
-                expect(res.body.response.token).to.exist;
-                res.body.response.message.should.equal('register success');
-                res.body.response.data.email.should.equal('bakti.widianto@gmail.com');
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.should.have.property('data');
+                res.body.should.have.property('token');
+                expect(res.body.token).to.exist;
+                res.body.message.should.equal('register success');
+                res.body.data.email.should.equal('bakti.widianto@gmail.com');
+                done();
+            })
+    })
+
+    //test login user
+    it('seharusnya berhasil login dengan metode POST', function (done) {
+        chai.request(server)
+            .post('/api/users/login')
+            .send({
+                'email': 'test@gmail.com',
+                'password': 'testing'
+            })
+            .end(function (err, res) {
+                console.log(res.body)
+                res.should.have.status(201);
+                res.should.be.json;
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.should.have.property('data');
+                res.body.should.have.property('token');
+                expect(res.body.token).to.exist;
+                res.body.message.should.equal('Authentication Success');
+                res.body.data.email.should.equal('test@gmail.com');
                 done();
             })
     })
