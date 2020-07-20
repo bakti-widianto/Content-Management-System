@@ -7,7 +7,7 @@ const DataDate = require('../models/DataDate');
 const should = chai.should();
 chai.use(chaiHTTP);
 
-describe('data', function () {
+describe('datadate', function () {
     //menghapus semua data 
     DataDate.collection.drop();
 
