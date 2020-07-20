@@ -114,9 +114,53 @@ router.post('/login', function (req, res, next) {
 
 //======POST CHECK TOKEN====
 router.post('/check', function (req, res, next) {
-  let token = req.headers
-  console.log(token)
+  let token = req.header('token')
+  let response = {
+    valid: false
+  }
+  // console.log(token)
+
+  if (!token) {
+    res.status(500).json(response)
+  } else {
+    const decode = jwt.verify(token, rahasia);
+    // console.log(decode)
+    Users.find({ email: decode.email })
+      .then(result => {
+        response.valid = true
+        res.status(200).json(response)
+      })
+      .catch(err => {
+        res.status(500).json({ response })
+      })
+  }
 });
+
+//========DESTROY TOKEN=======
+router.get('/logout', function (req, res, next) {
+  let token = req.header('token')
+  let response = {
+    logout: false
+  }
+
+  if (!token) {
+    res.status(500).json(response);
+  } else {
+    const decode = jwt.verify(token, rahasia)
+    Users.findOneAndUpdate({ email: decode.email }, { token: "" }, { new: true })
+      .then(result => {
+        // console.log(result)
+        response.logout = true
+        res.status(200).json(response)
+      })
+      .catch(err => {
+        res.status(500).json(response)
+      })
+  }
+
+
+});
+
 
 
 
