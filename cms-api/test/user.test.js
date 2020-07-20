@@ -66,7 +66,6 @@ describe('users', function () {
                 'password': 'testing'
             })
             .end(function (err, res) {
-                console.log(res.body)
                 res.should.have.status(201);
                 res.should.be.json;
                 res.body.should.be.a('object');
