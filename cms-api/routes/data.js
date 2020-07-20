@@ -21,9 +21,7 @@ router.post('/search', function (req, res, next) {
 
     Data.find(filter)
         .then(data => {
-            // console.log(data)
             response = data.map(item => {
-                // console.log(item)
                 return {
                     _id: item._id,
                     letter: item.letter,
@@ -67,22 +65,101 @@ router.post('/', function (req, res, next) {
 
 });
 
+// =======READ=======
+router.get('/', function (req, res, next) {
+    let response = []
+
+    Data.find()
+        .then(data => {
+            // console.log(data)
+            response = data.map(item => {
+                return {
+                    _id: item._id,
+                    letter: item.letter,
+                    frequency: item.frequency
+                }
+
+            })
+            res.status(200).json(response)
+        })
+        .catch(err => {
+            res.status(500).json(err)
+        })
+});
+
+//======EDIT=====
+router.put('/:id', function (req, res, next) {
+    let id = req.params.id
+    let { letter, frequency } = req.body
+    let response = {
+        success: false,
+        message: "",
+        data: {}
+    }
+
+    Data.findByIdAndUpdate(id, { letter, frequency }, { new: true })
+        .then(data => {
+            response.success = true
+            response.message = "data have been updated"
+            response.data._id = data._id
+            response.data.letter = data.letter
+            response.data.frequency = data.frequency
+            res.status(201).json(response)
+        })
+        .catch(err => {
+            response.message = "update failed"
+            res.status(500).json(response)
+        })
+});
+
+//=======DELETE========
+router.delete('/:id', function (req, res, next) {
+    let id = req.params.id
+    let response = {
+        success: false,
+        message: "",
+        data: {}
+    }
+
+    Data.findByIdAndRemove(id)
+        .then(data => {
+            response.success = true
+            response.message = "data have been deleted"
+            response.data._id = data._id
+            response.data.letter = data.letter
+            response.data.frequency = data.frequency
+            res.status(201).json(response)
+        })
+        .catch(err => {
+            response.message = "delete failed"
+            res.status(500).json(response)
+        })
+});
+
+//==========FIND=========
+router.get('/:id', function (req, res, next) {
+    let id = req.params.id
+    let response = {
+        success: false,
+        message: "",
+        data: {}
+    }
+
+    Data.findById(id)
+        .then(data => {
+            response.success = true
+            response.message = "data found"
+            response.data._id = data._id
+            response.data.letter = data.letter
+            response.data.frequency = data.frequency
+            res.status(200).json(response)
+        })
+        .catch(err => {
+            response.message = "data not found"
+            res.status(500).json(response)
+        })
 
 
-
-//=====READ=====
-// router.get('/', function (req, res, next) {
-//     let response = []
-
-//     Data.find()
-//         .then(data => {
-//             data.forEach(item => {
-//                 response.push({
-//                     _id: item._id
-//                 })
-//             })
-//         })
-//         .catch(err => res.status(500).json(err))
-// });
+});
 
 module.exports = router;
