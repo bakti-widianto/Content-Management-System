@@ -2,7 +2,6 @@
 const chai = require('chai');
 const chaiHTTP = require('chai-http');
 const server = require('../app');
-const User = require("../models/Data");
 const { expect } = require('chai');
 const Data = require('../models/Data');
 const should = chai.should();
@@ -110,6 +109,7 @@ describe('data', function () {
                 chai.request(server)
                     .delete(`/api/data/${id}`)
                     .end(function (err, res2) {
+                        // console.log(res2.body)
                         res2.should.have.status(201);
                         res2.should.be.json;
                         res2.body.should.be.a('object');
