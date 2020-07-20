@@ -4,7 +4,7 @@ const chaiHTTP = require('chai-http');
 const server = require('../app');
 const User = require("../models/Users");
 const { expect } = require('chai');
-const { getMaxListeners } = require('../models/Users');
+const { response } = require('express');
 const should = chai.should();
 chai.use(chaiHTTP);
 
@@ -77,6 +77,54 @@ describe('users', function () {
                 res.body.message.should.equal('Authentication Success');
                 res.body.data.email.should.equal('test@gmail.com');
                 done();
+            })
+    })
+
+    //check token
+    it('seharusnya berhasil check token dengan metode POST', function (done) {
+        chai.request(server)
+            .post('/api/users/login')
+            .send({
+                'email': 'test@gmail.com',
+                'password': 'testing'
+            })
+            .end(function (err, response) {
+                const token = response.body.token;
+                chai.request(server)
+                    .post('/api/users/check')
+                    .set('token', token)
+                    .end(function (err, res) {
+                        res.should.have.status(200);
+                        res.should.be.json;
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('valid');
+                        res.body.valid.should.equal(true);
+                        done()
+                    });
+            })
+    })
+
+    //destroy token
+    it('seharusnya berhasil destroy token dengan metode GET', function (done) {
+        chai.request(server)
+            .post('/api/users/login')
+            .send({
+                'email': 'test@gmail.com',
+                'password': 'testing'
+            })
+            .end(function (err, response) {
+                const token = response.body.token;
+                chai.request(server)
+                    .get('/api/users/logout')
+                    .set('token', token)
+                    .end(function (err, res) {
+                        res.should.have.status(200);
+                        res.should.be.json;
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('logout');
+                        res.body.logout.should.equal(true);
+                        done()
+                    });
             })
     })
 
