@@ -97,7 +97,7 @@ router.post('/login', function (req, res, next) {
 
             } else {
               response.message = "Authentication Failed"
-              res.status(500).json(response)
+              res.status(200).json(response)
             }
           })
           .catch(err => {
