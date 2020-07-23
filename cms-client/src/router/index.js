@@ -11,6 +11,7 @@ import Bar from '../components/Bar';
 import Home from '../components/Home';
 import Data from '../components/Data';
 import DateData from '../components/Datedata';
+import Maps from '../components/Maps';
 
 
 
@@ -66,6 +67,11 @@ const router = new VueRouter({
             path: '/datedata',
             name: 'DateData',
             component: DateData
+        },
+        {
+            path: '/maps',
+            name: 'Maps',
+            component: Maps
         }
     ]
 
