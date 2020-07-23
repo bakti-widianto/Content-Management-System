@@ -56,28 +56,51 @@ const router = new VueRouter({
         {
             path: '/home',
             name: 'Home',
-            component: Home
+            component: Home,
+            meta: {
+                isLoggedin: true
+            }
         },
         {
             path: '/data',
             name: 'Data',
-            component: Data
+            component: Data,
+            meta: {
+                isLoggedin: true
+            }
         },
         {
             path: '/datedata',
             name: 'DateData',
-            component: DateData
+            component: DateData,
+            meta: {
+                isLoggedin: true
+            }
         },
         {
             path: '/maps',
             name: 'Maps',
-            component: Maps
+            component: Maps,
+            meta: {
+                isLoggedin: true
+            }
         }
     ]
 
 
 });
 
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.isLoggedin)) {
+        if (!localStorage.getItem('token')) {
+            router.push('/login')
+        }else{
+            next()
+        }
+    } else {
+        next()
+    }
+})
 
 
 export default router;
