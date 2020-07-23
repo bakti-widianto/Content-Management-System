@@ -186,8 +186,8 @@ export default {
 
 body {
   font-family: 'Philosopher', sans-serif;
-  background: #007bff;
-  background: linear-gradient(to right, #2985ff, #90d0fa);
+  background: #00e1ff;
+  background: linear-gradient(to right, #28b9fc, #cbf0f7);
 }
 
 .card-signin {
