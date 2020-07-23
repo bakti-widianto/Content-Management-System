@@ -7,11 +7,10 @@
             <div class="row">
               <div class="col-10">
                 <h3 style="color: white">
-                  <i class="far fa-bookmark">Line Chart</i>
-                  
+                  <i class="far fa-bookmark">Line Chart</i>  
                 </h3>
               </div>
-              <router-link to="/data">
+              <router-link to="/datedata">
                 <div class="col">
                   <h3 style="color: white">
                     <i class="fas fa-book-open">.Data</i>

@@ -43,11 +43,7 @@
                 type="submit"
               >Sign in</button>
               <hr />
-              <a
-                class="d-block text-center"
-                @click.prevent="toLogin = !toLogin "
-                href
-              >Register</a>
+              <a class="d-block text-center" @click.prevent="toLogin = !toLogin " href>Register</a>
             </form>
           </div>
           <!-- TO REGISTER -->
@@ -118,7 +114,7 @@ export default {
       password: "",
       retypepassword: "",
       token: null,
-      toLogin: true
+      toLogin: true,
     };
   },
   methods: {
@@ -127,9 +123,9 @@ export default {
       this.$axios
         .post("http://localhost:3000/api/users/login", {
           email: this.email,
-          password: this.password
+          password: this.password,
         })
-        .then(response => {
+        .then((response) => {
           if (response.data.message == "Authentication Success") {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("email", response.data.data.email);
@@ -140,7 +136,7 @@ export default {
             console.log(response.data);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("error cuk!");
         });
     },
@@ -153,9 +149,9 @@ export default {
           .post("http://localhost:3000/api/users/register", {
             email: this.email,
             password: this.password,
-            retypepassword: this.retypepassword
+            retypepassword: this.retypepassword,
           })
-          .then(response => {
+          .then((response) => {
             if (response.data.message == "Email already exist") {
               return alert(
                 "this email has been registered, please try again with other email"
@@ -168,12 +164,12 @@ export default {
               return alert("something wrong please try again later");
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -185,7 +181,7 @@ export default {
 }
 
 body {
-  font-family: 'Philosopher', sans-serif;
+  font-family: "Philosopher", sans-serif;
   background: #00e1ff;
   background: linear-gradient(to right, #28b9fc, #cbf0f7);
 }
@@ -280,5 +276,4 @@ body {
   font-size: 12px;
   color: #777;
 }
-
 </style>
