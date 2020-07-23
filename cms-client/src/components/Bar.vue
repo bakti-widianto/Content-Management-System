@@ -5,17 +5,16 @@
         <div class="card">
           <div class="card-header bg-info">
             <div class="row">
-              <div class="col-9">
-                <h4 style="color: white">
-                  <i class="far fa-bookmark"></i>
-                  Bar Chart
-                </h4>
+              <div class="col-10">
+                <h3 style="color: white">
+                  <i class="far fa-bookmark">Bar Chart</i>
+                </h3>
               </div>
               <router-link to="/data">
                 <div class="col">
-                  <h4 style="color: white">
-                    <i class="fas fa-database"></i>.To Edit Data
-                  </h4>
+                  <h3 style="color: white">
+                    <i class="fas fa-book-open">.Data</i>
+                  </h3>
                 </div>
               </router-link>
             </div>
