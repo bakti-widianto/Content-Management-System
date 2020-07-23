@@ -3,10 +3,23 @@
     <div class="container d-flex w-80 h-80 p-3 mt-5 mb-5 flex-column">
       <div class="container mt-5">
         <div class="card">
-          <h5 class="card-header bg-info" style="color: white">
-            <i class="far fa-bookmark"></i>
-            <span style="color: white">Bar Chart</span>
-          </h5>
+          <div class="card-header bg-info">
+            <div class="row">
+              <div class="col-9">
+                <h4 style="color: white">
+                  <i class="far fa-bookmark"></i>
+                  Bar Chart
+                </h4>
+              </div>
+              <router-link to="/data">
+                <div class="col">
+                  <h4 style="color: white">
+                    <i class="fas fa-database"></i>.To Edit Data
+                  </h4>
+                </div>
+              </router-link>
+            </div>
+          </div>
           <div class="card flex-row">
             <div class="card-body"></div>
             <div class="container">
