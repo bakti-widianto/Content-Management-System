@@ -48,4 +48,34 @@ function pieChart(apiData) {
 
 }
 
-export { barChart, pieChart };
+//Pie Chart
+function lineChart(dataDates) {
+   google.charts.load('current', { 'packages': ['line'] });
+   google.charts.setOnLoadCallback(drawChart);
+
+   function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn("string", "Date");
+      data.addColumn("number", "Frequency");
+
+      data.addRows(dataDates.map(item => [item.letter, item.frequency]));
+
+      var options = {
+         title: "Frequency Rate for Each Date",
+         width: "100%",
+         height: 400,
+         hAxis: { title: "Date" },
+         vAxis: { title: "Frequency" },
+         legend: { position: "none" },
+         animation: { duration: 1000, startup: true, easing: "in" }
+      };
+
+      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+   }
+}
+
+
+export { barChart, pieChart, lineChart };
