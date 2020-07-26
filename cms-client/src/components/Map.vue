@@ -5,7 +5,14 @@
         <div class="card">
           <div class="card-header bg-info">
             <div class="row">
-              <div class="col-10">
+              <div class="col-5">
+                <router-link to="/">
+                  <h3 style="color: white">
+                    <i class="far fa-hand-point-left">.Menu</i>
+                  </h3>
+                </router-link>
+              </div>
+              <div class="col-5">
                 <h3 style="color: white">
                   <i class="far fa-bookmark">Map Chart</i>
                 </h3>

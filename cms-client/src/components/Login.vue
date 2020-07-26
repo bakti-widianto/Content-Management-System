@@ -44,6 +44,14 @@
               >Sign in</button>
               <hr />
               <a class="d-block text-center" @click.prevent="toLogin = !toLogin " href>Register</a>
+              <br />
+              <router-link to="/">
+                <div class="d-block text-center">
+                  <h6>
+                    <i class="far fa-hand-point-left">.Back to Menu</i>
+                  </h6>
+                </div>
+              </router-link>
             </form>
           </div>
           <!-- TO REGISTER -->
@@ -97,6 +105,14 @@
                 @click.prevent="toLogin = !toLogin "
                 href
               >Back to Login</a>
+              <br />
+              <router-link to="/">
+                <div class="d-block text-center">
+                  <h6>
+                    <i class="far fa-hand-point-left">.Back to Menu</i>
+                  </h6>
+                </div>
+              </router-link>
             </form>
           </div>
         </div>

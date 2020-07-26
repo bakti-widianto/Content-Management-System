@@ -5,18 +5,25 @@
         <div class="card">
           <div class="card-header bg-info">
             <div class="row">
-              <div class="col-10">
+              <div class="col-5">
+                <router-link to="/">
+                  <h3 style="color: white">
+                    <i class="far fa-hand-point-left">.Menu</i>
+                  </h3>
+                </router-link>
+              </div>
+              <div class="col-5">
                 <h3 style="color: white">
-                  <i class="far fa-bookmark">Line Chart</i>  
+                  <i class="far fa-bookmark">Line Chart</i>
                 </h3>
               </div>
-              <router-link to="/datedata">
-                <div class="col">
+              <div class="col">
+                <router-link to="/datedata">
                   <h3 style="color: white">
                     <i class="fas fa-book-open">.Data</i>
                   </h3>
-                </div>
-              </router-link>
+                </router-link>
+              </div>
             </div>
           </div>
           <div class="card flex-row">
