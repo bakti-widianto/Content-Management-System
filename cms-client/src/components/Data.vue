@@ -110,6 +110,12 @@
               </form>
             </div>
             <div class="card-body">
+              <pagination
+                v-bind:page="pagination.page"
+                v-bind:pages="pagination.pages"
+                v-bind:per-page="pagination.perPage"
+                v-on:change-page="changePage"
+              ></pagination>
               <table class="table table-striped text-center">
                 <thead>
                   <tr>
@@ -120,8 +126,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for=" (data,index) in datas" v-bind:key="data._id">
-                    <th>{{index + 1}}</th>
+                  <tr v-for=" (data,index) in computedDatas" v-bind:key="data._id">
+                    <th>{{pagination.page == 1 ? index + 1 : (pagination.perPage * pagination.page - pagination.perPage) + index + 1}}</th>
                     <td>{{data.letter}}</td>
                     <td>{{data.frequency}}</td>
                     <td>
@@ -159,10 +165,12 @@
 
 <script>
 import Navbar from "./Navbar";
+import Pagination from "./Pagination.vue";
 
 export default {
   components: {
-    navbar: Navbar
+    navbar: Navbar,
+    pagination: Pagination,
   },
   data() {
     return {
@@ -173,26 +181,46 @@ export default {
       eFrequency: "",
       sLetter: "",
       sFrequency: "",
-      id: ""
+      id: "",
+      pagination: {
+        page: 1,
+        pages: 1,
+        perPage: 10,
+      },
     };
   },
   watch: {
-    sLetter: function() {
+    sLetter: function () {
       this.searchData();
     },
-    sFrequency: function() {
+    sFrequency: function () {
       this.searchData();
-    }
+    },
+  },
+  computed: {
+    computedDatas() {
+      if (!this.datas) return [];
+      else {
+        const firstIndex = (this.pagination.page - 1) * this.pagination.perPage;
+        const lastIndex = this.pagination.page * this.pagination.perPage;
+
+        console.log(firstIndex, lastIndex);
+        return this.datas.slice(firstIndex, lastIndex);
+      }
+    },
   },
   methods: {
     loadData() {
       this.$axios
         .get("http://localhost:3000/api/data/")
-        .then(response => {
+        .then((response) => {
           //   console.log(response.data);
           this.datas = response.data;
+          this.pagination.pages = Math.ceil(
+            response.data.length / this.pagination.perPage
+          );
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     hendleAdd(e) {
       e.preventDefault();
@@ -200,9 +228,9 @@ export default {
       this.$axios
         .post("http://localhost:3000/api/data/", {
           letter: this.letter,
-          frequency: this.frequency
+          frequency: this.frequency,
         })
-        .then(response => {
+        .then((response) => {
           if (response.data.success == true) {
             this.letter = "";
             this.frequency = "";
@@ -211,14 +239,14 @@ export default {
             console.log("internal server error to Add");
           }
         })
-        .catch(err => console.log("Something wrong with API connection"));
+        .catch((err) => console.log("Something wrong with API connection"));
     },
     getUpdate(e) {
       e.preventDefault();
       const id = event.currentTarget.id;
       this.$axios
         .get("http://localhost:3000/api/data/" + id)
-        .then(result => {
+        .then((result) => {
           if (result.data.success == true) {
             // console.log(result.data);
             this.eLetter = result.data.data.letter;
@@ -228,16 +256,16 @@ export default {
             console.log("error bang");
           }
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     handleUpdate(e) {
       e.preventDefault();
       this.$axios
         .put("http://localhost:3000/api/data/" + this.id, {
           letter: this.eLetter,
-          frequency: this.eFrequency
+          frequency: this.eFrequency,
         })
-        .then(response => {
+        .then((response) => {
           if (response.data.success == true) {
             this.eLetter = "";
             this.eFrequency = "";
@@ -247,7 +275,7 @@ export default {
             console.log("error update");
           }
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     handleDelete(e) {
       e.preventDefault();
@@ -255,12 +283,12 @@ export default {
       console.log(id);
       this.$axios
         .delete("http://localhost:3000/api/data/" + id)
-        .then(response => {
+        .then((response) => {
           if (response.data.success == true) {
             this.loadData();
           } else console.log("Gagal remove");
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     searchData() {
       let search = {};
@@ -274,15 +302,22 @@ export default {
       }
       this.$axios
         .post("http://localhost:3000/api/data/search", search)
-        .then(response => {
+        .then((response) => {
           this.datas = response.data;
         })
-        .catch(err => console.log(err));
-    }
+        .catch((err) => console.log(err));
+    },
+    changePage(data) {
+      this.pagination.page = data.page;
+      this.pagination.pages = data.pages;
+      this.pagination.perPage = data.perPage;
+      console.log("change page", data);
+      console.log(this.pagination.page);
+    },
   },
   mounted() {
     this.loadData();
-  }
+  },
 };
 </script>
 

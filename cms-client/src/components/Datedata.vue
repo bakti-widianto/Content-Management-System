@@ -116,6 +116,12 @@
               </form>
             </div>
             <div class="card-body">
+              <pagination
+                v-bind:page="pagination.page"
+                v-bind:pages="pagination.pages"
+                v-bind:per-page="pagination.perPage"
+                v-on:change-page="changePage"
+              ></pagination>
               <table class="table table-striped text-center">
                 <thead>
                   <tr>
@@ -126,8 +132,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for=" (data,index) in datas" v-bind:key="data._id">
-                    <th>{{index + 1}}</th>
+                  <tr v-for=" (data,index) in computedDatas" v-bind:key="data._id">
+                    <th>{{pagination.page == 1 ? index + 1 : (pagination.perPage * pagination.page - pagination.perPage) + index + 1}}</th>
                     <td>{{data.letter}}</td>
                     <td>{{data.frequency}}</td>
                     <td>
@@ -165,10 +171,12 @@
 
 <script>
 import Navbar from "./Navbar";
+import Pagination from "./Pagination.vue";
 
 export default {
   components: {
     navbar: Navbar,
+    pagination: Pagination,
   },
   data() {
     return {
@@ -180,6 +188,11 @@ export default {
       sLetter: "",
       sFrequency: "",
       id: "",
+      pagination: {
+        page: 1,
+        pages: 1,
+        perPage: 10,
+      },
     };
   },
   watch: {
@@ -192,6 +205,18 @@ export default {
       //   console.log(this.sFrequency);
     },
   },
+  computed: {
+    computedDatas() {
+      if (!this.datas) return [];
+      else {
+        const firstIndex = (this.pagination.page - 1) * this.pagination.perPage;
+        const lastIndex = this.pagination.page * this.pagination.perPage;
+
+        console.log(firstIndex, lastIndex);
+        return this.datas.slice(firstIndex, lastIndex);
+      }
+    },
+  },
   methods: {
     loadData() {
       this.$axios
@@ -199,6 +224,9 @@ export default {
         .then((response) => {
           //   console.log(response.data);
           this.datas = response.data;
+          this.pagination.pages = Math.ceil(
+            response.data.length / this.pagination.perPage
+          );
         })
         .catch((err) => console.log(err));
     },
@@ -286,6 +314,13 @@ export default {
           this.datas = response.data;
         })
         .catch((err) => console.log(err));
+    },
+    changePage(data) {
+      this.pagination.page = data.page;
+      this.pagination.pages = data.pages;
+      this.pagination.perPage = data.perPage;
+      console.log("change page", data);
+      console.log(this.pagination.page);
     },
   },
   mounted() {

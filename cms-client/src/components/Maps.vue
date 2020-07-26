@@ -93,7 +93,7 @@
                       <i class="fas fa-search">Search</i>
                     </h3>
                   </div>
-                  <div class="col-3">
+                  <div class="col-5">
                     <input
                       type="text"
                       v-model="stitle"
@@ -101,21 +101,16 @@
                       placeholder="Title of maps"
                     />
                   </div>
-                  <div class="col-3">
-                    <input type="Number" v-model="slat" class="form-control" placeholder="Latitude" />
-                  </div>
-                  <div class="col-3">
-                    <input
-                      type="Number"
-                      v-model="slng"
-                      class="form-control"
-                      placeholder="Longitude"
-                    />
-                  </div>
                 </div>
               </form>
             </div>
             <div class="card-body">
+              <pagination
+                v-bind:page="pagination.page"
+                v-bind:pages="pagination.pages"
+                v-bind:per-page="pagination.perPage"
+                v-on:change-page="changePage"
+              ></pagination>
               <table class="table table-striped text-center">
                 <thead>
                   <tr>
@@ -127,8 +122,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for=" (data,index) in datas" v-bind:key="data._id">
-                    <th>{{index + 1}}</th>
+                  <tr v-for=" (data,index) in computedDatas" v-bind:key="data._id">
+                    <th>{{pagination.page == 1 ? index + 1 : (pagination.perPage * pagination.page - pagination.perPage) + index + 1}}</th>
                     <td>{{data.title}}</td>
                     <td>{{data.lat}}</td>
                     <td>{{data.lng}}</td>
@@ -167,10 +162,12 @@
 
 <script>
 import Navbar from "./Navbar";
+import Pagination from "./Pagination.vue";
 
 export default {
   components: {
     navbar: Navbar,
+    pagination: Pagination,
   },
   data() {
     return {
@@ -182,9 +179,12 @@ export default {
       elat: "",
       elng: "",
       stitle: "",
-      slat: "",
-      slng: "",
       id: "",
+      pagination: {
+        page: 1,
+        pages: 1,
+        perPage: 10,
+      },
     };
   },
   watch: {
@@ -192,13 +192,17 @@ export default {
       this.searchData();
       // console.log(this.stitle);
     },
-    slat: function () {
-      this.searchData();
-      // console.log(this.slat);
-    },
-    slng: function () {
-      this.searchData();
-      // console.log(this.slng);
+  },
+  computed: {
+    computedDatas() {
+      if (!this.datas) return [];
+      else {
+        const firstIndex = (this.pagination.page - 1) * this.pagination.perPage;
+        const lastIndex = this.pagination.page * this.pagination.perPage;
+
+        console.log(firstIndex, lastIndex);
+        return this.datas.slice(firstIndex, lastIndex);
+      }
     },
   },
   methods: {
@@ -208,6 +212,9 @@ export default {
         .then((response) => {
           //   console.log(response.data);
           this.datas = response.data;
+          this.pagination.pages = Math.ceil(
+            response.data.length / this.pagination.perPage
+          );
         })
         .catch((err) => console.log(err));
     },
@@ -288,14 +295,21 @@ export default {
     searchData() {
       let search = {};
       if (this.stitle) {
-        search.title = this.stitle;       
-      } 
+        search.title = this.stitle;
+      }
       this.$axios
         .post("http://localhost:3000/api/maps/search", search)
         .then((response) => {
           this.datas = response.data;
         })
         .catch((err) => console.log(err));
+    },
+    changePage(data) {
+      this.pagination.page = data.page;
+      this.pagination.pages = data.pages;
+      this.pagination.perPage = data.perPage;
+      console.log("change page", data);
+      console.log(this.pagination.page);
     },
   },
   mounted() {
