@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "mocha --timeout 10000",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "seed": "node ./seeder/seed.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
