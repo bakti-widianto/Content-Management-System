@@ -80,7 +80,7 @@ function lineChart(dataDates) {
 function mapChart(apiData) {
    google.charts.load('current', {
       'packages': ['map'],
-      'mapsApiKey': 'AIzaSyBvu5r9W_wbQcAn9e5qYfMX1_Eo7t-2qmI'
+      'mapsApiKey': 'AIzaSyBvu5r9W_wbQcAn9e5qYfMX1_Eo7t-2qmi'
 
    });
    google.charts.setOnLoadCallback(drawMap);
